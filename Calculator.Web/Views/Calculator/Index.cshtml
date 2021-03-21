@@ -1,0 +1,58 @@
+﻿@model CalculateModel
+@{
+    var operations = (IEnumerable<OperationEnum>)ViewBag.Operations;
+}
+<div align="center">
+    <h2>Calculator</h2>
+    @using (Html.BeginForm())
+    {
+        <table>
+            <tr>
+                <th> First Number </th>
+                <td>
+                    <input asp-for="FirstNumber" class="form-control" />
+                    <span class="field-validation-error" asp-validation-for="FirstNumber"></span>
+                </td>
+            </tr>
+            <tr>
+                <th> Last Number </th>
+                <td>
+                    <input asp-for="SecondNumber" class="form-control" />
+                    <span class="field-validation-error" asp-validation-for="SecondNumber"></span>
+                </td>
+            </tr>
+            <tr>
+
+                @foreach (var op in operations)
+                {
+                    <td>
+                        <input style="width: 100%" type="submit" class="btn btn-primary" name="Operation" value="@op" />
+                    </td>
+                }
+            </tr>
+            <tr>
+                <th>Result</th>
+                <td>
+                    <input asp-for="Result" class="form-control" disabled />
+                    <span class="field-validation-error" asp-validation-for="Result"></span>
+                </td>
+
+            </tr>
+        </table>
+    }
+
+    <button id="history" class="btn btn-info">History</button>
+    <ul id="history-container"></ul>
+</div>
+<script>
+    $('#history').on('click', evt => {
+        $.getJSON("calculator/GetHistory", function (data) {
+            debugger;
+            var items = [];
+            $.each(data, function (key, val) {
+                items.push("<li id='" + key + "'>" + val + "</li>");
+            });
+            $('#history-container').html(items.join(""));
+        });
+    });
+</script>
